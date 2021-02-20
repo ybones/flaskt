@@ -1,0 +1,6 @@
+Flask==1.1.2
+gevent==21.1.2
+gunicorn==20.0.4
+redis==3.5.3
+setproctitle==1.2.2
+concurrent-log==1.0.1
