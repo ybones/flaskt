@@ -9,6 +9,54 @@ class Config(object):
     def init_app(app):
         pass
 
+class TestConfig(Config):
+    LOG_CONF = {
+        'version': 1,
+        'disable_existing_loggers': False,
+
+        'formatters': {
+            'standard': {
+                'format': '%(asctime)s [%(process)d] [%(levelname)s] [%(module)s.%(funcName)s.%(lineno)d] %(message)s',
+                'datefmt': '[%Y-%m-%d %H:%M:%S %z]',
+                'class': 'logging.Formatter'
+            },
+
+            'generic': {
+                'format': '%(asctime)s [%(process)d] [%(levelname)s] [%(module)s.%(funcName)s.%(lineno)d] %(message)s',
+                'datefmt': '[%Y-%m-%d %H:%M:%S %z]',
+                'class': 'logging.Formatter'
+            },
+        },
+        
+        'handlers': {
+            'console': {
+                'class': 'logging.StreamHandler',
+                'formatter': 'standard',
+            },
+
+            'flaskt': {
+                'class': 'concurrent_log.ConcurrentTimedRotatingFileHandler',
+                'when': 'D',
+                'backupCount': 7,
+                'filename': '../log/flaskt/flask.log',
+                'encoding': 'utf-8',
+                'formatter': 'generic',
+            },
+        },
+
+        'root': {
+            'level': 'DEBUG',
+            'handlers': ['flaskt', 'console']
+        }
+    }
+
+    @classmethod
+    def init_app(cls, app):
+        import logging
+        import logging.config
+        logging.config.dictConfig(cls.LOG_CONF)
+
+
 class ProductionConfig(Config):
     LOG_CONF = {
         'version': 1,
@@ -45,7 +93,7 @@ class ProductionConfig(Config):
         },
 
         'root': {
-            'level': 'DEBUG',
+            'level': 'INFO',
             'handlers': ['flaskt', 'console']
         }
     }
@@ -58,5 +106,6 @@ class ProductionConfig(Config):
 
 
 config = {
+    'test': TestConfig,
     'production': ProductionConfig,
 }

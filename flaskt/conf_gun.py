@@ -69,7 +69,7 @@ logconfig_dict = dict(
         "gunicorn.access": {
             "level": "DEBUG",
             "handlers": ["console"],
-            "propagate": True,
+            "propagate": False,
             "qualname": "gunicorn.access"
         }
     },

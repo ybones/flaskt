@@ -2,16 +2,18 @@ version: "3"
 
 services:
   flaskt:
+    image: web-flaskt
     container_name: flaskt
     build: ./flaskt
     environment:
       - TZ=Asia/Shanghai
     volumes:
     - ./flaskt:/code
-    - ./log/gun:/var/log/gun
-    - ./log/flaskt:/var/log/flaskt
+    - /home/dockerdata/log/gun:/var/log/gun
+    - /home/dockerdata/log/flaskt:/var/log/flaskt
 
   nginx:
+    image: nginx-flaskt:latest
     container_name: nginx-flaskt
     build: nginx/.
     ports:
@@ -21,4 +23,59 @@ services:
     environment:
       - TZ=Asia/Shanghai
     volumes:
-     - ./log/nginx:/var/log/nginx
+     - /home/dockerdata/log/nginx:/var/log/nginx
+
+  redis-master:
+    image: redis-master:latest
+    container_name: redis-master
+    build: ./redis
+    ports: 
+     - "8001:6379"
+    command: redis-server /usr/local/etc/redis/redis.conf
+    environment:
+     - TZ=Asia/Shanghai
+    volumes:
+     - /home/dockerdata/redis/8001:/data
+    expose: 
+      - "6379"
+    networks:
+     - sentinel-master
+
+  redis-slave-1:
+    image: redis-slave-1:latest
+    container_name: redis-slave-1
+    build: ./redis
+    ports: 
+      - "8002:6379"
+    command: redis-server /usr/local/etc/redis/redis.conf --slaveof redis-master 6379  --masterauth 12345678
+    environment:
+      - TZ=Asia/Shanghai
+    volumes:
+     - /home/dockerdata/redis/8002:/data
+    depends_on: 
+      - redis-master
+    expose: 
+      - "6379"
+    networks:
+     - sentinel-master
+
+  redis-slave-2:
+    image: redis-slave-2:latest
+    container_name: redis-slave-2
+    build: ./redis
+    ports: 
+      - "8003:6379"
+    command: redis-server /usr/local/etc/redis/redis.conf --slaveof redis-master 6379  --masterauth 12345678
+    environment:
+      - TZ=Asia/Shanghai
+    volumes:
+     - /home/dockerdata/redis/8003:/data
+    depends_on: 
+      - redis-master
+    expose: 
+      - "6379"
+    networks:
+     - sentinel-master
+
+networks:
+  sentinel-master:

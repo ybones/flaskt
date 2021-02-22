@@ -15,7 +15,5 @@ def api_test(id):
     app.logger.info('api: id: %s', id)
     return "print: %d" % id
 
-app.logger.info("%s", [i for i in app.logger.handlers])
-
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
