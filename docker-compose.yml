@@ -2,7 +2,7 @@ version: "3"
 
 services:
   flaskt:
-    image: web-flaskt
+    image: web-flaskt:latest
     container_name: flaskt
     build: ./flaskt
     environment:
@@ -13,7 +13,7 @@ services:
     - /home/dockerdata/log/flaskt:/var/log/flaskt
 
   nginx:
-    image: nginx-flaskt:latest
+    image: nginx:latest
     container_name: nginx-flaskt
     build: nginx/.
     ports:
@@ -24,11 +24,11 @@ services:
       - TZ=Asia/Shanghai
     volumes:
      - /home/dockerdata/log/nginx:/var/log/nginx
+     - ./nginx/nginx.conf:/etc/nginx/nginx.conf
 
   redis-master:
-    image: redis-master:latest
+    image: redis:latest
     container_name: redis-master
-    build: ./redis
     ports: 
      - "8001:6379"
     command: redis-server /usr/local/etc/redis/redis.conf
@@ -36,15 +36,13 @@ services:
      - TZ=Asia/Shanghai
     volumes:
      - /home/dockerdata/redis/8001:/data
-    expose: 
-      - "6379"
+     - ./redis/redis-master.conf:/usr/local/etc/redis/redis.conf
     networks:
      - sentinel-master
 
   redis-slave-1:
-    image: redis-slave-1:latest
+    image: redis:latest
     container_name: redis-slave-1
-    build: ./redis
     ports: 
       - "8002:6379"
     command: redis-server /usr/local/etc/redis/redis.conf --slaveof redis-master 6379  --masterauth 12345678
@@ -52,17 +50,15 @@ services:
       - TZ=Asia/Shanghai
     volumes:
      - /home/dockerdata/redis/8002:/data
+     - ./redis/redis-slave-1.conf:/usr/local/etc/redis/redis.conf
     depends_on: 
       - redis-master
-    expose: 
-      - "6379"
     networks:
      - sentinel-master
 
   redis-slave-2:
-    image: redis-slave-2:latest
+    image: redis:latest
     container_name: redis-slave-2
-    build: ./redis
     ports: 
       - "8003:6379"
     command: redis-server /usr/local/etc/redis/redis.conf --slaveof redis-master 6379  --masterauth 12345678
@@ -70,10 +66,9 @@ services:
       - TZ=Asia/Shanghai
     volumes:
      - /home/dockerdata/redis/8003:/data
+     - ./redis/redis-slave-2.conf:/usr/local/etc/redis/redis.conf
     depends_on: 
       - redis-master
-    expose: 
-      - "6379"
     networks:
      - sentinel-master
 
