@@ -41,13 +41,12 @@ services:
     ports: 
      - "8001:6379"
     command: bash -c "
-      cp -fp /usr/local/etc/redis/redis-master.conf /usr/local/etc/redis/redis.conf
-      && chmod 0777 /usr/local/etc/redis/redis.conf
-      && redis-server /usr/local/etc/redis/redis.conf"
+      cp -fp /usr/local/etc/redis/redis-master.conf /data/redis.conf
+      && redis-server /data/redis.conf"
     environment:
      - TZ=Asia/Shanghai
     volumes:
-     - /home/dockerdata/redis/8001:/data
+     - /home/dockerdata/redis/redis-master:/data
      - ./redis/redis-master:/usr/local/etc/redis
     networks:
       sentinel-master:
@@ -59,13 +58,12 @@ services:
     ports: 
       - "8002:6379"
     command: bash -c "
-      cp -fp /usr/local/etc/redis/redis-slave-1.conf /usr/local/etc/redis/redis.conf
-      && chmod 0777 /usr/local/etc/redis/redis.conf
-      && redis-server /usr/local/etc/redis/redis.conf"
+      cp -fp /usr/local/etc/redis/redis-slave-1.conf /data/redis.conf
+      && redis-server /data/redis.conf"
     environment:
       - TZ=Asia/Shanghai
     volumes:
-     - /home/dockerdata/redis/8002:/data
+     - /home/dockerdata/redis/redis-slave-1:/data
      - ./redis/redis-slave-1:/usr/local/etc/redis
     depends_on: 
       - redis-master
@@ -79,13 +77,12 @@ services:
     ports: 
       - "8003:6379"
     command: bash -c "
-      cp -fp /usr/local/etc/redis/redis-slave-2.conf /usr/local/etc/redis/redis.conf
-      && chmod 0777 /usr/local/etc/redis/redis.conf
-      && redis-server /usr/local/etc/redis/redis.conf"
+      cp -fp /usr/local/etc/redis/redis-slave-2.conf /data/redis.conf
+      && redis-server /data/redis.conf"
     environment:
       - TZ=Asia/Shanghai
     volumes:
-     - /home/dockerdata/redis/8003:/data
+     - /home/dockerdata/redis/redis-slave-2:/data
      - ./redis/redis-slave-2:/usr/local/etc/redis
     depends_on: 
       - redis-master
@@ -99,12 +96,12 @@ services:
     ports:
       - "18001:16379"
     command: bash -c "
-      cp -fp /usr/local/etc/redis/redis-sentinel-1.conf /usr/local/etc/redis/sentinel.conf
-      && chmod 0777 /usr/local/etc/redis/sentinel.conf
-      && redis-sentinel /usr/local/etc/redis/sentinel.conf"
+      cp -fp /usr/local/etc/redis/redis-sentinel-1.conf /data/sentinel.conf
+      && redis-sentinel /data/sentinel.conf"
     environment:
       - TZ=Asia/Shanghai
     volumes:
+      - /home/dockerdata/redis/redis-sentinel-1:/data
       - ./redis/redis-sentinel-1:/usr/local/etc/redis
     depends_on: 
       - redis-master
@@ -120,12 +117,12 @@ services:
     ports:
       - "18002:16379"
     command: bash -c "
-      cp -fp /usr/local/etc/redis/redis-sentinel-2.conf /usr/local/etc/redis/sentinel.conf
-      && chmod 0777 /usr/local/etc/redis/sentinel.conf
-      && redis-sentinel /usr/local/etc/redis/sentinel.conf"
+      cp -fp /usr/local/etc/redis/redis-sentinel-2.conf /data/sentinel.conf
+      && redis-sentinel /data/sentinel.conf"
     environment:
       - TZ=Asia/Shanghai
     volumes:
+      - /home/dockerdata/redis/redis-sentinel-2:/data
       - ./redis/redis-sentinel-2:/usr/local/etc/redis
     depends_on: 
       - redis-master
@@ -141,12 +138,12 @@ services:
     ports:
       - "18003:16379"
     command: bash -c "
-      cp -fp /usr/local/etc/redis/redis-sentinel-3.conf /usr/local/etc/redis/sentinel.conf
-      && chmod 0777 /usr/local/etc/redis/sentinel.conf
-      && redis-sentinel /usr/local/etc/redis/sentinel.conf"
+      cp -fp /usr/local/etc/redis/redis-sentinel-3.conf /data/sentinel.conf
+      && redis-sentinel /data/sentinel.conf"
     environment:
       - TZ=Asia/Shanghai
     volumes:
+      - /home/dockerdata/redis/redis-sentinel-3:/data
       - ./redis/redis-sentinel-3:/usr/local/etc/redis
     depends_on: 
       - redis-master
