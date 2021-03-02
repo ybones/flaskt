@@ -1,36 +1,36 @@
 version: "3"
 
 services:
-  flaskt:
-    image: web-flaskt:latest
-    container_name: flaskt
-    build: ./flaskt
+  hunger:
+    image: web-hunger:latest
+    container_name: hunger
+    build: ./hunger
     environment:
       - TZ=Asia/Shanghai
     volumes:
-    - ./flaskt:/code
-    - /home/dockerdata/log/gun:/var/log/gun
-    - /home/dockerdata/log/flaskt:/var/log/flaskt
-    depends_on: 
+      - ./hunger:/code
+      - /home/dockerdata/log/gun:/var/log/gun
+      - /home/dockerdata/log/hunger:/var/log/hunger
+    depends_on:
       - redis-sentinel-1
       - redis-sentinel-2
       - redis-sentinel-3
     networks:
       sentinel-master:
         ipv4_address: 172.20.1.10
-     
+
   nginx:
-    image: nginx-flaskt:latest
-    container_name: nginx-flaskt
+    image: nginx-hunger:latest
+    container_name: nginx-hunger
     build: nginx/.
     ports:
       - "80:80"
     depends_on:
-      - flaskt
+      - hunger
     environment:
       - TZ=Asia/Shanghai
     volumes:
-     - /home/dockerdata/log/nginx:/var/log/nginx
+      - /home/dockerdata/log/nginx:/var/log/nginx
     networks:
       sentinel-master:
         ipv4_address: 172.20.2.10
@@ -38,34 +38,34 @@ services:
   redis-master:
     image: redis:latest
     container_name: redis-master
-    ports: 
-     - "8001:6379"
+    ports:
+      - "7001:6379"
     command: bash -c "
       cp -fp /usr/local/etc/redis/redis-master.conf /data/redis.conf
       && redis-server /data/redis.conf"
     environment:
-     - TZ=Asia/Shanghai
+      - TZ=Asia/Shanghai
     volumes:
-     - /home/dockerdata/redis/redis-master:/data
-     - ./redis/redis-master:/usr/local/etc/redis
+      - /home/dockerdata/redis/redis-master:/data
+      - ./redis/redis-master:/usr/local/etc/redis
     networks:
       sentinel-master:
         ipv4_address: 172.20.3.10
-  
+
   redis-slave-1:
     image: redis:latest
     container_name: redis-slave-1
-    ports: 
-      - "8002:6379"
+    ports:
+      - "7002:6379"
     command: bash -c "
       cp -fp /usr/local/etc/redis/redis-slave-1.conf /data/redis.conf
       && redis-server /data/redis.conf"
     environment:
       - TZ=Asia/Shanghai
     volumes:
-     - /home/dockerdata/redis/redis-slave-1:/data
-     - ./redis/redis-slave-1:/usr/local/etc/redis
-    depends_on: 
+      - /home/dockerdata/redis/redis-slave-1:/data
+      - ./redis/redis-slave-1:/usr/local/etc/redis
+    depends_on:
       - redis-master
     networks:
       sentinel-master:
@@ -74,17 +74,17 @@ services:
   redis-slave-2:
     image: redis:latest
     container_name: redis-slave-2
-    ports: 
-      - "8003:6379"
+    ports:
+      - "7003:6379"
     command: bash -c "
       cp -fp /usr/local/etc/redis/redis-slave-2.conf /data/redis.conf
       && redis-server /data/redis.conf"
     environment:
       - TZ=Asia/Shanghai
     volumes:
-     - /home/dockerdata/redis/redis-slave-2:/data
-     - ./redis/redis-slave-2:/usr/local/etc/redis
-    depends_on: 
+      - /home/dockerdata/redis/redis-slave-2:/data
+      - ./redis/redis-slave-2:/usr/local/etc/redis
+    depends_on:
       - redis-master
     networks:
       sentinel-master:
@@ -94,7 +94,7 @@ services:
     image: redis:latest
     container_name: redis-sentinel-1
     ports:
-      - "18001:16379"
+      - "17001:16379"
     command: bash -c "
       cp -fp /usr/local/etc/redis/redis-sentinel-1.conf /data/sentinel.conf
       && redis-sentinel /data/sentinel.conf"
@@ -103,7 +103,7 @@ services:
     volumes:
       - /home/dockerdata/redis/redis-sentinel-1:/data
       - ./redis/redis-sentinel-1:/usr/local/etc/redis
-    depends_on: 
+    depends_on:
       - redis-master
       - redis-slave-1
       - redis-slave-2
@@ -115,7 +115,7 @@ services:
     image: redis:latest
     container_name: redis-sentinel-2
     ports:
-      - "18002:16379"
+      - "17002:16379"
     command: bash -c "
       cp -fp /usr/local/etc/redis/redis-sentinel-2.conf /data/sentinel.conf
       && redis-sentinel /data/sentinel.conf"
@@ -124,7 +124,7 @@ services:
     volumes:
       - /home/dockerdata/redis/redis-sentinel-2:/data
       - ./redis/redis-sentinel-2:/usr/local/etc/redis
-    depends_on: 
+    depends_on:
       - redis-master
       - redis-slave-1
       - redis-slave-2
@@ -136,7 +136,7 @@ services:
     image: redis:latest
     container_name: redis-sentinel-3
     ports:
-      - "18003:16379"
+      - "17003:16379"
     command: bash -c "
       cp -fp /usr/local/etc/redis/redis-sentinel-3.conf /data/sentinel.conf
       && redis-sentinel /data/sentinel.conf"
@@ -145,7 +145,7 @@ services:
     volumes:
       - /home/dockerdata/redis/redis-sentinel-3:/data
       - ./redis/redis-sentinel-3:/usr/local/etc/redis
-    depends_on: 
+    depends_on:
       - redis-master
       - redis-slave-1
       - redis-slave-2

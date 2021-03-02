@@ -2,12 +2,10 @@
 """
 详细信息 gunicorn.config
 """
-import gevent
-import gevent.pool
 import gevent.monkey
+
 gevent.monkey.patch_all()
 
-import sys
 import platform
 
 # 工作进程数
@@ -42,7 +40,7 @@ bind = "0.0.0.0:5000"
 preload_app = False
 
 # 进程名字
-proc_name = "flaskt"
+proc_name = "hunger"
 
 # 设置访问日志和错误信息日志路径
 _sys = platform.system()
@@ -67,7 +65,7 @@ logconfig_dict = dict(
         "gunicorn.error": {
             "level": "DEBUG",
             "handlers": ["error_console"],
-            "propagate": False,               # 其默认是为1，表示消息将会传递给高层次logger的handler，通常我们需要指定其值为0
+            "propagate": False,  # 其默认是为1，表示消息将会传递给高层次logger的handler，通常我们需要指定其值为0
             "qualname": "gunicorn.error"  # 返回当前对象的所有父级对象的名称
         },
 

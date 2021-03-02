@@ -3,11 +3,14 @@
 app 的配置
 '''
 
+
 class Config(object):
     '''base'''
+
     @staticmethod
     def init_app(app):
         pass
+
 
 class TestConfig(Config):
 
@@ -34,18 +37,18 @@ class ProductionConfig(Config):
                 'class': 'logging.Formatter'
             },
         },
-        
+
         'handlers': {
             'console': {
                 'class': 'logging.StreamHandler',
                 'formatter': 'standard',
             },
 
-            'flaskt': {
+            'hunger': {
                 'class': 'concurrent_log.ConcurrentTimedRotatingFileHandler',
                 'when': 'D',
                 'backupCount': 7,
-                'filename': '/var/log/flaskt/flask.log',
+                'filename': '/var/log/hunger/hunger.log',
                 'encoding': 'utf-8',
                 'formatter': 'generic',
             },
@@ -53,7 +56,7 @@ class ProductionConfig(Config):
 
         'root': {
             'level': 'INFO',
-            'handlers': ['flaskt', 'console']
+            'handlers': ['hunger', 'console']
         }
     }
 
@@ -61,12 +64,10 @@ class ProductionConfig(Config):
         "SentinelConf": [{
             "host": "redis-sentinel-1",
             "port": 16379,
-        },
-        {
+        }, {
             "host": "redis-sentinel-2",
             "port": 16379,
-        },
-        {
+        }, {
             "host": "redis-sentinel-3",
             "port": 16379,
         }],
@@ -74,7 +75,7 @@ class ProductionConfig(Config):
         # 暂时先不分库了。
         "RedisConf": {
             "service_name": "mymaster",
-            "db_info":{
+            "db_info": {
                 "db": 1,
                 "password": "r123456",
             }
@@ -83,7 +84,6 @@ class ProductionConfig(Config):
 
     @classmethod
     def init_app(cls, app):
-        import logging
         import logging.config
         logging.config.dictConfig(cls.LOG_CONF)
 

@@ -1,20 +1,11 @@
 # -*- coding: utf-8 -*-
-import redis
-from redis.sentinel import Sentinel
+from flask import current_app as app
+from gevent.lock import BoundedSemaphore
 from redis.exceptions import (
     ConnectionError,
-    DataError,
-    ExecAbortError,
-    NoScriptError,
-    PubSubError,
-    RedisError,
-    ResponseError,
     TimeoutError,
-    WatchError,
 )
-
-from gevent.lock import BoundedSemaphore
-from flask import current_app as app
+from redis.sentinel import Sentinel
 
 
 class RedisClient(object):
