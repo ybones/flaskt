@@ -2,6 +2,11 @@
 """
 详细信息 gunicorn.config
 """
+import gevent
+import gevent.pool
+import gevent.monkey
+gevent.monkey.patch_all()
+
 import sys
 import platform
 
