@@ -15,6 +15,7 @@ services:
       - redis-sentinel-1
       - redis-sentinel-2
       - redis-sentinel-3
+    restart: always
     networks:
       sentinel-master:
         ipv4_address: 172.20.1.10
@@ -31,6 +32,7 @@ services:
       - TZ=Asia/Shanghai
     volumes:
       - /home/dockerdata/log/nginx:/var/log/nginx
+    restart: always
     networks:
       sentinel-master:
         ipv4_address: 172.20.2.10
