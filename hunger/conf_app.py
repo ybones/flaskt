@@ -26,13 +26,13 @@ class ProductionConfig(Config):
 
         'formatters': {
             'standard': {
-                'format': '%(asctime)s [%(process)d] [%(levelname)s] [%(module)s.%(funcName)s.%(lineno)d] %(message)s',
+                'format': '%(asctime)s [%(process)d.%(thread)d] [%(levelname)s] [%(module)s.%(funcName)s.%(lineno)d] %(message)s',
                 'datefmt': '[%Y-%m-%d %H:%M:%S %z]',
                 'class': 'logging.Formatter'
             },
 
             'generic': {
-                'format': '%(asctime)s [%(process)d] [%(levelname)s] [%(module)s.%(funcName)s.%(lineno)d] %(message)s',
+                'format': '%(asctime)s [%(process)d.%(thread)d] [%(levelname)s] [%(module)s.%(funcName)s.%(lineno)d] %(message)s',
                 'datefmt': '[%Y-%m-%d %H:%M:%S %z]',
                 'class': 'logging.Formatter'
             },
