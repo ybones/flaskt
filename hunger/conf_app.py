@@ -89,7 +89,7 @@ class ProductionConfig(Config):
 
         # 初始化redis
         from datebase import redis_
-        redis_.init(cls.REDIS_CONF)
+        redis_.init(app, cls.REDIS_CONF)
 
 
 config = {

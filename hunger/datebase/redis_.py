@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from flask import current_app as app
+from flask import current_app
 from gevent.lock import BoundedSemaphore
 from redis.exceptions import (
     ConnectionError,
@@ -13,7 +13,7 @@ class RedisClient(object):
     def __init__(self, conf):
         self.bse = BoundedSemaphore(2)
         self.s = Sentinel([(item['host'], item['port']) for item in conf['SentinelConf']],
-                          socket_timeout=0.5)
+                          socket_timeout=1)
         self.conf = conf['RedisConf']
         self.conn = None
         self._initConn(self.conf)
@@ -32,15 +32,16 @@ class RedisClient(object):
             return cmd_func(*args[1:])
         except (ConnectionError, TimeoutError) as e:
             self._initConn(self.conf)
-            app.logger.error("execute_command :%s" % e)
+            current_app.logger.error("execute_command :%s" % e)
 
         except Exception as e:
-            app.logger.error("execute_command :%s" % e)
+            current_app.logger.error("execute_command :%s" % e)
 
 
 redisClient_ = None
 
 
-def init(conf):
+def init(app, conf):
     global redisClient_
     redisClient_ = RedisClient(conf)
+    app.logger.info("redis init success :%s" % redisClient_.s)
