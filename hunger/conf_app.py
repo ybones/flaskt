@@ -77,7 +77,7 @@ class ProductionConfig(Config):
             "service_name": "mymaster",
             "db_info": {
                 "db": 1,
-                "password": "r123456",
+                "password": "123456",
             }
         }
     }
