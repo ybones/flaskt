@@ -9,8 +9,8 @@ services:
       - TZ=Asia/Shanghai
     volumes:
       - ./hunger:/code
-      - /home/dockerdata/log/gun:/var/log/gun
-      - /home/dockerdata/log/hunger:/var/log/hunger
+      - ./dockerdata/log/gun:/var/log/gun
+      - ./dockerdata/log/hunger:/var/log/hunger
     depends_on:
       - redis-sentinel-1
       - redis-sentinel-2
@@ -31,7 +31,7 @@ services:
     environment:
       - TZ=Asia/Shanghai
     volumes:
-      - /home/dockerdata/log/nginx:/var/log/nginx
+      - ./dockerdata/log/nginx:/var/log/nginx
     restart: always
     networks:
       sentinel-master:
@@ -48,7 +48,7 @@ services:
     environment:
       - TZ=Asia/Shanghai
     volumes:
-      - /home/dockerdata/redis/redis-master:/data
+      - ./dockerdata/redis/redis-master:/data
       - ./redis/redis-master:/usr/local/etc/redis
     networks:
       sentinel-master:
@@ -65,7 +65,7 @@ services:
     environment:
       - TZ=Asia/Shanghai
     volumes:
-      - /home/dockerdata/redis/redis-slave-1:/data
+      - ./dockerdata/redis/redis-slave-1:/data
       - ./redis/redis-slave-1:/usr/local/etc/redis
     depends_on:
       - redis-master
@@ -84,7 +84,7 @@ services:
     environment:
       - TZ=Asia/Shanghai
     volumes:
-      - /home/dockerdata/redis/redis-slave-2:/data
+      - ./dockerdata/redis/redis-slave-2:/data
       - ./redis/redis-slave-2:/usr/local/etc/redis
     depends_on:
       - redis-master
@@ -103,7 +103,7 @@ services:
     environment:
       - TZ=Asia/Shanghai
     volumes:
-      - /home/dockerdata/redis/redis-sentinel-1:/data
+      - ./dockerdata/redis/redis-sentinel-1:/data
       - ./redis/redis-sentinel-1:/usr/local/etc/redis
     depends_on:
       - redis-master
@@ -124,7 +124,7 @@ services:
     environment:
       - TZ=Asia/Shanghai
     volumes:
-      - /home/dockerdata/redis/redis-sentinel-2:/data
+      - ./dockerdata/redis/redis-sentinel-2:/data
       - ./redis/redis-sentinel-2:/usr/local/etc/redis
     depends_on:
       - redis-master
@@ -145,7 +145,7 @@ services:
     environment:
       - TZ=Asia/Shanghai
     volumes:
-      - /home/dockerdata/redis/redis-sentinel-3:/data
+      - ./dockerdata/redis/redis-sentinel-3:/data
       - ./redis/redis-sentinel-3:/usr/local/etc/redis
     depends_on:
       - redis-master
