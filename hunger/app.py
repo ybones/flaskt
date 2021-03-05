@@ -3,8 +3,8 @@ import logging
 
 from flask import Flask
 
-import conf_app
-from datebase import redisdb
+from hunger.config import conf_app
+from common.datebase import redisdb
 
 app = Flask(__name__)
 

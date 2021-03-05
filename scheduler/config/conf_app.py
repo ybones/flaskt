@@ -44,11 +44,11 @@ class ProductionConfig(Config):
                 'formatter': 'standard',
             },
 
-            'hunger': {
+            'scheduler': {
                 'class': 'concurrent_log.ConcurrentTimedRotatingFileHandler',
                 'when': 'D',
                 'backupCount': 7,
-                'filename': '/var/log/hunger/hunger.log',
+                'filename': '/var/log/scheduler/scheduler.log',
                 'encoding': 'utf-8',
                 'formatter': 'generic',
             },
@@ -56,7 +56,7 @@ class ProductionConfig(Config):
 
         'root': {
             'level': 'INFO',
-            'handlers': ['hunger', 'console']
+            'handlers': ['scheduler', 'console']
         }
     }
 
@@ -88,7 +88,7 @@ class ProductionConfig(Config):
         logging.config.dictConfig(cls.LOG_CONF)
 
         # 初始化redis
-        from datebase import redis_
+        from common.datebase import redis_
         redis_.init(app, cls.REDIS_CONF)
 
 
