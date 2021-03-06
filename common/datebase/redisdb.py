@@ -5,7 +5,7 @@ import logging
 import gevent
 
 from common.datebase import redis_
-from common.entity.util import async_func, async_switch_func
+from common.entity.wraptools import async_func, async_switch_func
 
 logger = logging.getLogger()
 
