@@ -6,9 +6,10 @@ app 的配置
 
 class Config(object):
     '''base'''
+    PROJECT_NAME = "hunger"
 
-    @staticmethod
-    def init_app(app):
+    @classmethod
+    def init_app(cls, app):
         pass
 
 
@@ -20,46 +21,6 @@ class TestConfig(Config):
 
 
 class ProductionConfig(Config):
-    LOG_CONF = {
-        'version': 1,
-        'disable_existing_loggers': False,
-
-        'formatters': {
-            'standard': {
-                'format': '%(asctime)s [%(process)d.%(thread)d] [%(levelname)s] [%(module)s.%(funcName)s.%(lineno)d] %(message)s',
-                'datefmt': '[%Y-%m-%d %H:%M:%S %z]',
-                'class': 'logging.Formatter'
-            },
-
-            'generic': {
-                'format': '%(asctime)s [%(process)d.%(thread)d] [%(levelname)s] [%(module)s.%(funcName)s.%(lineno)d] %(message)s',
-                'datefmt': '[%Y-%m-%d %H:%M:%S %z]',
-                'class': 'logging.Formatter'
-            },
-        },
-
-        'handlers': {
-            'console': {
-                'class': 'logging.StreamHandler',
-                'formatter': 'standard',
-            },
-
-            'hunger': {
-                'class': 'concurrent_log.ConcurrentTimedRotatingFileHandler',
-                'when': 'D',
-                'backupCount': 7,
-                'filename': '/var/log/hunger/hunger.log',
-                'encoding': 'utf-8',
-                'formatter': 'generic',
-            },
-        },
-
-        'root': {
-            'level': 'INFO',
-            'handlers': ['hunger', 'console']
-        }
-    }
-
     REDIS_CONF = {
         "SentinelConf": [{
             "host": "redis-sentinel-1",
@@ -85,7 +46,9 @@ class ProductionConfig(Config):
     @classmethod
     def init_app(cls, app):
         import logging.config
-        logging.config.dictConfig(cls.LOG_CONF)
+        from common.config import conf_log
+        log_conf = conf_log.get_log_conf(cls.PROJECT_NAME)
+        logging.config.dictConfig(log_conf)
 
         # 初始化redis
         from common.datebase import redis_
