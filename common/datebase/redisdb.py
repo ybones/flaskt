@@ -5,6 +5,7 @@ import logging
 import gevent
 
 from common.datebase import redis_
+from common.entity.util import async_func, async_switch_func
 
 logger = logging.getLogger()
 
@@ -16,13 +17,9 @@ def query_redis_cmd(*args):
     return redis_.g_redis_client.execute_command(*args)
 
 
+@async_switch_func
 def send_redis_cmd(*args):
     """
     异步接口
     """
-
-    def send():
-        redis_.g_redis_client.execute_command(*args)
-
-    gevent.spawn(send)
-    gevent.sleep(0)
+    redis_.g_redis_client.execute_command(*args)
