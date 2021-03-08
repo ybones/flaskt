@@ -1,13 +1,7 @@
 # -*- coding: utf-8 -*-
 
-import logging
-
-import gevent
-
 from common.datebase import redis_
-from common.entity.wraptools import async_func, async_switch_func
-
-logger = logging.getLogger()
+from common.entity.gtools import async_func
 
 
 def query_redis_cmd(*args):
@@ -17,7 +11,7 @@ def query_redis_cmd(*args):
     return redis_.g_redis_client.execute_command(*args)
 
 
-@async_switch_func
+@async_func
 def send_redis_cmd(*args):
     """
     异步接口
