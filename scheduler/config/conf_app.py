@@ -54,6 +54,10 @@ class ProductionConfig(Config):
         from common.datebase import redis_
         redis_.init(app, cls.REDIS_CONF)
 
+        # 初始化调度器
+        from scheduler.task import task
+        task.init(app)
+
 
 config = {
     'test': TestConfig,

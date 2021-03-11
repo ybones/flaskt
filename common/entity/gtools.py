@@ -1,16 +1,10 @@
 # -*- coding: utf-8 -*-
 import functools
 import logging
-import sys
-import traceback
 
 import gevent
 
 logger = logging.getLogger()
-
-
-def on_panic(etype, value, tb):
-    logging.critical(traceback.format_exception(etype, value, tb))
 
 
 def go_func(func, *args, **kwargs):
@@ -20,8 +14,8 @@ def go_func(func, *args, **kwargs):
     def safe_wrap(f):
         try:
             f(*args, **kwargs)
-        except:
-            on_panic(*sys.exc_info())
+        except Exception as e:
+            logging.error(e, exc_info=True)
 
     gevent.spawn(safe_wrap, func)
 
@@ -35,8 +29,8 @@ def go_delay_func(delay, func, *args, **kwargs):
     def safe_wrap(f):
         try:
             f(*args, **kwargs)
-        except:
-            on_panic(*sys.exc_info())
+        except Exception as e:
+            logging.error(e, exc_info=True)
 
     gevent.spawn_later(delay, safe_wrap, func)
 

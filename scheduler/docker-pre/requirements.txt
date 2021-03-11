@@ -5,3 +5,4 @@ redis==3.5.3
 setproctitle==1.2.2
 concurrent-log==1.0.1
 APScheduler==3.7.0
+geventhttpclient==1.4.4
